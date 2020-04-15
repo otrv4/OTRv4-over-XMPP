@@ -9,7 +9,7 @@ OTRv4 to work correctly over XMPP.
 
 ### Explain how multicasting/synchronization will work
 
-#### OMEMO:
+#### OMEMO
 
 From the security audit plus some comments:
 
@@ -38,14 +38,63 @@ random key (<key/>) tagged with the corresponding receiver id (rid)"
 
 Since step 6, it is executed per device.
 
+Check: '2.2.3. Malicious device'.
+
+#### Wire
+
+Up to 8 devices (7 permanent, 1 temporary).
+
+"To send an encrypted message the sending client needs to have a cryptographic
+session with every client it wants to send the message to (usually all clients
+of all participants of a particular conversation). It will encrypt the plain
+text message for every recipient and send the batch to the server. The server
+checks if every client of every user who is a participant of the conversation is
+part of the batch. If a client is missing, the server will reject the request
+and inform the sender of missing clients. The sender can then fetch prekeys for
+the missing clients and prepare the remaining messages before attempting to
+resend the entire batch."
+
+Maybe we can create a policy, like Wire, that allows this multicasting...
+
 Review:
 
 * [Private Group Messaging](https://signal.org/blog/private-groups/)
 * [OMEMO: cryptographic analysis report](https://conversations.im/omemo/audit.pdf)
+* [XEP-0384: OMEMO Encryption](https://xmpp.org/extensions/xep-0384.html)
+* [Wire github issue](https://github.com/wireapp/wire/issues/70)
+* [Key verification to secure your conversations](https://wire.com/en/blog/key-verification-secure-conversations/)
+* [Wire Security Whitepaper](https://wire-docs.wire.com/download/Wire+Security+Whitepaper.pdf)
 
 ### Define a prekey server discovery and place
 
+The way OMEMO publishes seems not fit to be used by OTRv4, as we need to
+execute a DAKE with a untrusted server. OMEMO might also benefit from using
+another option.
+
+Review:
+
+* [XEP-0060: Publish-Subscribe](https://xmpp.org/extensions/xep-0060.html)
+* [XEP-0163: Personal Eventing Protocol](https://xmpp.org/extensions/xep-0163.html)
+
 ### Explain how key management will work
+
+Note this:
+
+```
+A more elegant solution would be to do what OWS does: let the server send each
+one-time prekey once and delete them afterwards, instead of delivering the
+entire list of prekeys. That way, no collisions can occur on the prekeys and
+fewer initial messages get dropped. When the server runs out of one-time prekeys,
+the server lets Alice know and she can complete the PreKeySignalMessage without
+a one-time key, just as the Signal application. It is unclear if this solution
+is possible to implement in XMPP, as it appears that there currently is no XMPP
+extension that allows a server to delete/mark PEP nodes while the user is
+offline.
+```
+
+Review:
+
+* [The X3DH Key Agreement Protocol](https://signal.org/docs/specifications/x3dh/)
 
 ### Explain how online and offline versions will work
 
