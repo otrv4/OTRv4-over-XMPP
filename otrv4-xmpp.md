@@ -56,6 +56,17 @@ resend the entire batch."
 
 Maybe we can create a policy, like Wire, that allows this multicasting...
 
+#### Signal
+
+Multidevice is achieved by sharing the private part of the identity key
+through devices, as per video.
+
+#### Check
+
+* Malicious devices
+* Linked devices
+* Adding/removing devices
+
 Review:
 
 * [Private Group Messaging](https://signal.org/blog/private-groups/)
@@ -64,6 +75,7 @@ Review:
 * [Wire github issue](https://github.com/wireapp/wire/issues/70)
 * [Key verification to secure your conversations](https://wire.com/en/blog/key-verification-secure-conversations/)
 * [Wire Security Whitepaper](https://wire-docs.wire.com/download/Wire+Security+Whitepaper.pdf)
+* [Signal multidevice](https://www.youtube.com/watch?v=7WnwSovjYMs&feature=youtu.be&t=31m28s)
 
 ### Define a prekey server discovery and place
 
