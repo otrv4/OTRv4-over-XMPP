@@ -67,7 +67,7 @@ through devices, as per video.
 * Linked devices
 * Adding/removing devices
 
-Review:
+#### References:
 
 * [Private Group Messaging](https://signal.org/blog/private-groups/)
 * [OMEMO: cryptographic analysis report](https://conversations.im/omemo/audit.pdf)
@@ -76,6 +76,8 @@ Review:
 * [Key verification to secure your conversations](https://wire.com/en/blog/key-verification-secure-conversations/)
 * [Wire Security Whitepaper](https://wire-docs.wire.com/download/Wire+Security+Whitepaper.pdf)
 * [Signal multidevice](https://www.youtube.com/watch?v=7WnwSovjYMs&feature=youtu.be&t=31m28s)
+* [The Sesame Algorithm: Session Management for Asynchronous Message Encryption](https://signal.org/docs/specifications/sesame/)
+* [Attack of the Week: Group Messaging in WhatsApp and Signal](https://blog.cryptographyengineering.com/2018/01/10/attack-of-the-week-group-messaging-in-whatsapp-and-signal/)
 
 ### Define a prekey server discovery and place
 
