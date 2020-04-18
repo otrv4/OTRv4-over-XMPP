@@ -7,11 +7,13 @@ OTRv4 to work correctly over XMPP.
 
 ## Important issues to consider over XMPP
 
-### Explain how multicasting/synchronization will work
+### Multicasting/synchronization
+
+First some overview of how other protocols approach the problem:
 
 #### OMEMO
 
-From the security audit plus some comments:
+From the security audit (including some of our comments):
 
 "Assume Alice wants to send an OMEMO encrypted message from her phone. She can
 detect that Bob’s device(s) support OMEMO by requesting his device list with
@@ -27,6 +29,8 @@ information in a single MessageElement: the encrypted payload (<payload/>), the
 plaintext iv (<iv/>), the sender id (sid) and the encrypted
 random key (<key/>) tagged with the corresponding receiver id (rid)"
 
+The process works like this:
+
 1. Generate a random `sym_k`.
 2. Calculate: `enc_key(32), auth_key(32), IV(16) := SHA-256(sym_k || 0x00 || "OMEMO Payload")`
 3. Encrypt: `c := AES_CBC(enc_key, IV || message)`
@@ -38,11 +42,14 @@ random key (<key/>) tagged with the corresponding receiver id (rid)"
 
 Since step 6, it is executed per device.
 
-Check: '2.2.3. Malicious device'.
+This is similar of how Signal works for group messaging.
 
 #### Wire
 
-Up to 8 devices (7 permanent, 1 temporary).
+In the wire protocol, it is allowed to have up to 8 devices (7 permanent,
+1 that can be used as a temporary account).
+
+From the Wire security paper:
 
 "To send an encrypted message the sending client needs to have a cryptographic
 session with every client it wants to send the message to (usually all clients
@@ -54,14 +61,59 @@ and inform the sender of missing clients. The sender can then fetch prekeys for
 the missing clients and prepare the remaining messages before attempting to
 resend the entire batch."
 
-Maybe we can create a policy, like Wire, that allows this multicasting...
-
 #### Signal
 
 Multidevice is achieved by sharing the private part of the identity key
-through devices, as per video.
+through devices, as defined by Moxie.
 
-#### Check
+Signal has also introduced the Sesame protocol for the handling of devices;
+but it is unsure if this is what is used.
+
+#### OTR (version 3)
+
+OTR used instance tags, which uniquely identify a device.
+
+"Clients include instance tags in all OTR version 3 messages. Instance tags are
+32-bit values that are intended to be persistent. If the same client is logged
+into the same account from multiple locations, the intention is that the client
+will have different instance tags at each location. As shown below, OTR version
+3 messages (fragmented and unfragmented) include the source and destination
+instance tags. If a client receives a message that lists a destination instance
+tag different from its own, the client should discard the message."
+
+If a user had multiple OTRv3 sessions with the same buddy, the
+application needed to provide some way for the user to select
+which instance to send outgoing messages to.
+
+Instance tags on the 3rd version of the protocol had policies, which the user
+or the client per default could define:
+
+OTRL_INSTAG_BEST: send to the most secure one, based on: conv status (if the
+                  conversation is on encrypted, or plaintex and finished state),
+                  then fingerprint status (if it is trusted), then most recent.
+OTRL_INSTAG_RECENT: send to the most recent of the two meta instances below
+OTRL_INSTAG_RECENT_RECEIVED: send to the most recently received
+OTRL_INSTAG_RECENT_SENT: send to the most recently sent
+
+OTRL_INSTAG_BEST choses the instance that has the best conv status, then
+fingerprint status (in the event of a tie), then most recent (similarly
+in the event of a tie). When calculating how recent an instance has been
+active, OTRL_INSTAG_BEST is limited by a one second resolution.
+
+OTRL_INSTAG_RECENT does not have this limitation, but due to inherent
+uncertainty in some networks, otr's notion of the most recent may not
+always agree with the remote network.  It is important to understand
+this limitation due to the issue noted in the next paragraph.
+
+Note that instances do add some uncertainty when dealing with networks
+that only deliver messages to the most recently active session for a
+buddy who is logged in multiple times. If you have a particular instance
+selected, and the IM network is simply not going to deliver to that
+particular instance, there isn't too much otr can do. In this case,
+you may want your application to warn when a user has selected an
+instance that is not the most recent.
+
+#### Caveats
 
 * Malicious devices
 * Linked devices
