@@ -252,21 +252,18 @@ We will follow what has been defined [here](https://github.com/otrv4/otrv4-preke
 
 ### Explain how key management will work
 
-Note this:
+OTR in its version 4 uses long-term key material that should be handled with
+care.
 
-```
-A more elegant solution would be to do what OWS does: let the server send each
-one-time prekey once and delete them afterwards, instead of delivering the
-entire list of prekeys. That way, no collisions can occur on the prekeys and
-fewer initial messages get dropped. When the server runs out of one-time prekeys,
-the server lets Alice know and she can complete the PreKeySignalMessage without
-a one-time key, just as the Signal application. It is unclear if this solution
-is possible to implement in XMPP, as it appears that there currently is no XMPP
-extension that allows a server to delete/mark PEP nodes while the user is
-offline.
-```
+#### Proposal for OTR version 4 and XMPP
 
-Review:
+It is discouraged to import/export long-term key material, as each device
+will have its own. The only moment were it can be allowed is when a device
+will be destroyed, and the user needs to set up their account on a new device.
+Nevertheless, is encouraged that new key material is generated when changing
+to a new device.
+
+#### References
 
 * [The X3DH Key Agreement Protocol](https://signal.org/docs/specifications/x3dh/)
 
@@ -290,6 +287,8 @@ When a user is offline, unavailable or invisible, an offline DAKE will start.
 * [Extensible Messaging and Presence Protocol (XMPP): Instant Messaging and Presence](https://xmpp.org/rfcs/rfc3921.html#int)
 
 ### How to carry the encrypted message
+
+Still needs to be defined.
 
 ## To take into account
 
