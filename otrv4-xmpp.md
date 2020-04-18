@@ -170,6 +170,7 @@ For XMPP, OTRv4 will need:
   other party and our own.
 * The XEP-0060: Publish-Subscribe for announcing the devices one supports. This
   list should not contain more than 8 entries.
+* Disallow carbons.
 
 #### Caveats
 
@@ -192,7 +193,11 @@ For XMPP, OTRv4 will need:
 * [The Sesame Algorithm: Session Management for Asynchronous Message Encryption](https://signal.org/docs/specifications/sesame/)
 * [Attack of the Week: Group Messaging in WhatsApp and Signal](https://blog.cryptographyengineering.com/2018/01/10/attack-of-the-week-group-messaging-in-whatsapp-and-signal/)
 
-### Define a prekey server discovery and place
+
+### Define a prekey server discovery
+
+OTR in its version 4 needs an untrusted prekey server to publish key material
+needed for offline conversations.
 
 The way OMEMO publishes seems not fit to be used by OTRv4, as we need to
 execute a DAKE with a untrusted server. OMEMO might also benefit from using
@@ -234,3 +239,14 @@ Review:
 ## To take into account
 
 ### Encrypt other things than message bodies
+
+This will not be covered by OTR version 4.
+
+## Incorporate to XEP after revision of previous XEP
+
+* Processing Hints
+* Explicit Message Encryption
+
+### References
+
+* [Observations on implementing XMPP](https://github.com/siacs/Conversations/blob/master/docs/observations.md)
