@@ -113,11 +113,72 @@ particular instance, there isn't too much otr can do. In this case,
 you may want your application to warn when a user has selected an
 instance that is not the most recent.
 
+### Proposal for OTR version 4
+
+OTR in its version 4 will retain all previous instance tag policies, with
+the same behaviour:
+
+1. OTRL_INSTAG_BEST
+2. OTRL_INSTAG_RECENT
+3. OTRL_INSTAG_RECENT_RECEIVED
+4. OTRL_INSTAG_RECENT_SENT
+
+It will also add a new type of instance tag policy:
+
+4. OTRL_INSTAG_MULTICASTING
+
+The application implementing OTRv4 has to keep track of the devices a user
+has, if the policy is implemented. A maximum of 8 devices are allowed. Every
+device will keep track of their own key material (long-term and ephemeral),
+client and prekey profile. It is not recommended to share key material between
+devices.
+
+The way it will work is:
+
+For online messaging without using the initialization with an identity message:
+
+Bob who wants to communicate with Alice will start by sending her a query
+message or whitespace tag. Upon receipt, Bob will:
+
+* If the initiation message contains the tag for v3, and Bob receiving device
+  only supports v3, the protocol will continue in v3.
+* If the initiation message contains the tag for v4, and Bob receiving device
+  supports v4:
+  * Bob will request to the underlying protocol (or how the application have
+    defined it), a list of the devices that Alice supports, and the list
+    of devices that Bob supports. It should be checked that they all
+    support version 4.
+  * Bob will request to see if Alice is online or offline in those devices.
+  * Bob will request to see if Bob's other devices are online or offline.
+  * Depending of the online or offline status, Bob will either begin an online
+    or offline DAKE with each one of them (with each device from Alice, and
+    with each device from Bob). This means that each device will
+    have its own key material.
+  * The application will send the messages to the specific device depending
+    on the unique instance tag.
+  * Alice will receive all messages to all the devices she supports. She will
+    answer back to all the devices listed as 'sender's instance tag' in the
+    messages Bob sent.
+
+#### Proposal for OTR version 4 and XMPP
+
+For XMPP, OTRv4 will need:
+
+* A dedicated Prekey Server where key material to start an offline conversation
+  will be stored.
+* The XEP-0163: Personal Eventing Protocol for discovering the devices of the
+  other party and our own.
+* The XEP-0060: Publish-Subscribe for announcing the devices one supports. This
+  list should not contain more than 8 entries.
+
 #### Caveats
 
+* Race conditions
+* Messages to Alice arriving earlier than to Bob own devices
 * Malicious devices
 * Linked devices
 * Adding/removing devices
+* Collisions of instance tags
 
 #### References:
 
