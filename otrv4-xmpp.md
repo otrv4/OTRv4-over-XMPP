@@ -180,6 +180,8 @@ For XMPP, OTRv4 will need:
 * Linked devices
 * Adding/removing devices
 * Collisions of instance tags
+* Handling the TLV type 1
+* Changing from main sending device
 
 #### References:
 
