@@ -272,9 +272,22 @@ Review:
 
 ### Explain how online and offline versions will work
 
-## Not so important issues
+In order to use OTR in its version 4, we need a way to discover that a contact
+is online or offline.
 
-### Explain invisibility status and OTR
+#### Proposal for OTR version 4 and XMPP
+
+Users of OTRv4 will need to have subscription to the contact's presence
+information. The best subscription state for this might be 'Both'.
+
+When a user is online, an online DAKE will start.
+When a user is offline, unavailable or invisible, an offline DAKE will start.
+
+#### References
+
+* [XEP-0186: Invisible Command](https://xmpp.org/extensions/xep-0186.html)
+* [Mapping the Extensible Messaging and Presence Protocol (XMPP) to Common Presence and Instant Messaging](https://xmpp.org/rfcs/rfc3922.html)
+* [Extensible Messaging and Presence Protocol (XMPP): Instant Messaging and Presence](https://xmpp.org/rfcs/rfc3921.html#int)
 
 ### How to carry the encrypted message
 
