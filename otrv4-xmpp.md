@@ -199,14 +199,54 @@ For XMPP, OTRv4 will need:
 OTR in its version 4 needs an untrusted prekey server to publish key material
 needed for offline conversations.
 
-The way OMEMO publishes seems not fit to be used by OTRv4, as we need to
-execute a DAKE with a untrusted server. OMEMO might also benefit from using
-another option.
+We will look at how other protocols handle this.
 
-Review:
+#### OMEMO
+
+OMEMO uses Publish-Subscribe (XEP-0060) to publish key material. This is
+not usable for OTRv4 as we need specific functionality from the server.
+
+It also encourages to, in the future, use a dedicated server:
+"While in the future a dedicated key server component could be used to
+distribute key material for session creation"
+
+#### Wire
+
+Wire uses a dedicated centralized server. You can self-host it, as federation is
+on the long road map of Wire. The source code is [here](https://github.com/wireapp/wire-server#how-to-install-and-run-wire-server),
+which is useful to take a look when implementing.
+
+One major issue of their approach is that "the Wire client authenticates with a
+central server in order to provide user presence information (Wire does not
+attempt to hide metadata, other than the central server promising not to log
+very much information).
+
+#### Signal
+
+Signal uses a dedicated centralized server. You can self-host it; but it does
+not seem like it will become federated. The servers are also used for
+discovery of contacts. The source code can be found [here](https://github.com/signalapp/Signal-Server).
+
+#### Proposal for OTR version 4
+
+We will use an untrusted decentralized dedicated server. This is due to the
+fact that we need certain functionality:
+
+* Communication with the server is encrypted with the same OTRv4 mechanism
+* Servers have fingerprints used for verification
+
+##### Proposal for OTR version 4 and XMPP
+
+We will follow what has been defined [here](https://github.com/otrv4/otrv4-prekey-server/blob/master/otrv4-prekey-server.md#a-prekey-server-for-otrv4-over-xmpp).
+
+#### References
 
 * [XEP-0060: Publish-Subscribe](https://xmpp.org/extensions/xep-0060.html)
 * [XEP-0163: Personal Eventing Protocol](https://xmpp.org/extensions/xep-0163.html)
+* [Open sourcing Wire server code](https://medium.com/@wireapp/open-sourcing-wire-server-code-ef7866a731d5)
+* [Wire](https://crysp.uwaterloo.ca/opinion/wire/)
+* [Secure Messaging App Wire Stores Everyone You've Ever Contacted in Plain Text](https://www.vice.com/en_us/article/gvzw5x/secure-messaging-app-wire-stores-everyone-youve-ever-contacted-in-plain-text)
+* [Reflections: The ecosystem is moving](https://signal.org/blog/the-ecosystem-is-moving/)
 
 ### Explain how key management will work
 
