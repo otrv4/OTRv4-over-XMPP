@@ -125,29 +125,27 @@ the same behaviour:
 
 It will also add a new type of instance tag policy:
 
-4. OTRL_INSTAG_MULTICASTING
+4. OTRL_INSTAG_SYNCHORNIZE
 
 The application implementing OTRv4 has to keep track of the devices a user
-has, if the policy is implemented. A maximum of 8 devices are allowed. Every
+has, if this policy is implemented. A maximum of 8 devices are allowed. Every
 device will keep track of their own key material (long-term and ephemeral),
 client and prekey profile. It is not recommended to share key material between
 devices.
 
-The way it will work is:
+The following procedure works for online conversations that are not started with
+an identity message directly.
 
-For online messaging without using the initialization with an identity message:
+Bob (using a mobile device), who wants to communicate with Alice, will start
+by sending her a query message or whitespace tag. Upon receipt, Alice will:
 
-Bob who wants to communicate with Alice will start by sending her a query
-message or whitespace tag. Upon receipt, Bob will:
-
-* If the initiation message contains the tag for v3, and Bob receiving device
+* If the initiation message contains the tag for v3, and Alice receiving device
   only supports v3, the protocol will continue in v3.
-* If the initiation message contains the tag for v4, and Bob receiving device
+* If the initiation message contains the tag for v4, and Alice receiving device
   supports v4:
-  * Bob will request to the underlying protocol (or how the application have
-    defined it), a list of the devices that Alice supports, and the list
-    of devices that Bob supports. It should be checked that they all
-    support version 4.
+  * Alice will request to the underlying protocol (XMPP), a list of the devices
+    that Bob supports, and the list of devices that she supports. The list will
+    only contain devices that support version 4.
   * Bob will request to see if Alice is online or offline in those devices.
   * Bob will request to see if Bob's other devices are online or offline.
   * Depending of the online or offline status, Bob will either begin an online
@@ -156,9 +154,11 @@ message or whitespace tag. Upon receipt, Bob will:
     have its own key material.
   * The application will send the messages to the specific device depending
     on the unique instance tag.
-  * Alice will receive all messages to all the devices she supports. She will
-    answer back to all the devices listed as 'sender's instance tag' in the
-    messages Bob sent.
+  * Alice will receive all messages in all the devices she supports. Bob will
+    receive all messages in all the devices he supports. She will
+    answer back by performing the same mechanism.
+
+// TODO: instance tags will have to be generated prior to
 
 #### Proposal for OTR version 4 and XMPP
 
