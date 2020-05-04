@@ -133,6 +133,10 @@ device will keep track of their own key material (long-term and ephemeral),
 client and prekey profile. It is not recommended to share key material between
 devices.
 
+The following paragraphs describe the actions needed to be taken into account
+for when starting conversations. The status of the conversation (online or
+offline) is always defined prior to sending any OTR message.
+
 The following procedure works for online conversations that are not started with
 an identity message directly:
 
@@ -160,6 +164,25 @@ by sending her a query message or whitespace tag. Upon receipt, Alice will:
 
 The following procedure works for online conversations that are started with
 an identity message directly:
+
+Bob (using a mobile device), who wants to communicate with Alice, will:
+
+* Bob will request to the underlying protocol (XMPP), a list of the devices
+  that Alice supports, and the list of devices that he supports. The list will
+  only contain devices that support version 4.
+* Bob will request to see if Alice is online or offline in those devices.
+* Bob will request to see if Bob's other devices are online or offline.
+* Depending of the online or offline status, Bob will either begin an online
+  or offline DAKE with each one of them (with each device from Alice, and
+  with each device from Bob). This means that each device will
+  have its own key material.
+* The application will send the messages to the specific device depending
+  on the unique instance tag.
+* Alice will receive all messages in all the devices she supports. Bob will
+  receive all messages in all the devices he supports. She will
+  answer back by performing the same mechanism.
+
+The following procedure works for offline conversations:
 
 Bob (using a mobile device), who wants to communicate with Alice, will:
 
