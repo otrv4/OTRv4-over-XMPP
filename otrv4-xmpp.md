@@ -218,9 +218,9 @@ Bob (using a mobile device), who wants to communicate with Alice, will:
 For XMPP, OTRv4 will need:
 
 * A dedicated Prekey Server where key material to start an offline conversation
-  will be stored.
+  will be stored. This server will also store Client and Prekey profiles.
 * The XEP-0163: Personal Eventing Protocol for discovering the devices of the
-  other party and our own.
+  other party and their own.
 * The XEP-0060: Publish-Subscribe for announcing the devices one supports. This
   list should not contain more than 8 entries.
 * Disallow carbons.
