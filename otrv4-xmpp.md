@@ -125,7 +125,7 @@ the same behaviour:
 
 It will also add a new type of instance tag policy:
 
-4. OTRL_INSTAG_SYNCHORNIZE
+4. OTRL_INSTAG_SYNCHRONIZE
 
 The application implementing OTRv4 has to keep track of the devices a user
 has, if this policy is implemented. A maximum of 8 devices are allowed. Every
@@ -134,7 +134,7 @@ client and prekey profile. It is not recommended to share key material between
 devices.
 
 The following procedure works for online conversations that are not started with
-an identity message directly.
+an identity message directly:
 
 Bob (using a mobile device), who wants to communicate with Alice, will start
 by sending her a query message or whitespace tag. Upon receipt, Alice will:
@@ -146,17 +146,37 @@ by sending her a query message or whitespace tag. Upon receipt, Alice will:
   * Alice will request to the underlying protocol (XMPP), a list of the devices
     that Bob supports, and the list of devices that she supports. The list will
     only contain devices that support version 4.
-  * Bob will request to see if Alice is online or offline in those devices.
-  * Bob will request to see if Bob's other devices are online or offline.
-  * Depending of the online or offline status, Bob will either begin an online
+  * Alice will request to see if Bob is online or offline in those devices.
+  * Alice will request to see if Alice's other devices are online or offline.
+  * Depending of the online or offline status, Alice will either begin an online
     or offline DAKE with each one of them (with each device from Alice, and
     with each device from Bob). This means that each device will
     have its own key material.
   * The application will send the messages to the specific device depending
     on the unique instance tag.
-  * Alice will receive all messages in all the devices she supports. Bob will
-    receive all messages in all the devices he supports. She will
+  * Bob will receive all messages in all the devices she supports. Alice will
+    receive all messages in all the devices he supports. He will
     answer back by performing the same mechanism.
+
+The following procedure works for online conversations that are started with
+an identity message directly:
+
+Bob (using a mobile device), who wants to communicate with Alice, will:
+
+* Bob will request to the underlying protocol (XMPP), a list of the devices
+  that Alice supports, and the list of devices that he supports. The list will
+  only contain devices that support version 4.
+* Bob will request to see if Alice is online or offline in those devices.
+* Bob will request to see if Bob's other devices are online or offline.
+* Depending of the online or offline status, Bob will either begin an online
+  or offline DAKE with each one of them (with each device from Alice, and
+  with each device from Bob). This means that each device will
+  have its own key material.
+* The application will send the messages to the specific device depending
+  on the unique instance tag.
+* Alice will receive all messages in all the devices she supports. Bob will
+  receive all messages in all the devices he supports. She will
+  answer back by performing the same mechanism.
 
 // TODO: instance tags will have to be generated prior to
 
