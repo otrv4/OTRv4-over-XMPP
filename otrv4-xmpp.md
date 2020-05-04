@@ -201,7 +201,17 @@ Bob (using a mobile device), who wants to communicate with Alice, will:
   receive all messages in all the devices he supports. She will
   answer back by performing the same mechanism.
 
-// TODO: instance tags will have to be generated prior to
+**To note**
+
+* If a device advertises that they only use a certain mode (for example, the
+  'OTRv4-interactive-only' mode), then any received messaged will be handled
+  according to the mode (if in a 'OTRv4-interactive-only' mode, an offline
+  message is received, for example, the message should be discarded).
+* A session is destroyed (with each conversation with every device) once a
+  TLV Type 1 Disconnected is sent.
+* Instance tags are generated prior to the start of any conversation
+* For verification of long-term key material, Trust-on-first-use (TOFU)
+  can be used.
 
 #### Proposal for OTR version 4 and XMPP
 
