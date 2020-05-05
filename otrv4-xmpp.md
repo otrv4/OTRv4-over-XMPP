@@ -2,18 +2,18 @@
 
 This document will eventually become an XEP.
 
-This document will be used to define what issues need to be addressed for
+This document defines what issues need to be addressed for
 OTRv4 to work correctly over XMPP.
 
 ## Important issues to consider over XMPP
 
 ### Multicasting/synchronization
 
-First some overview of how other protocols approach the problem:
+First an overview of how other protocols approach the problem:
 
 #### OMEMO
 
-From the security audit (including some of our comments):
+From its security audit (including some of our comments):
 
 "Assume Alice wants to send an OMEMO encrypted message from her phone. She can
 detect that Bob’s device(s) support OMEMO by requesting his device list with
@@ -67,7 +67,7 @@ Multidevice is achieved by sharing the private part of the identity key
 through devices, as defined by Moxie.
 
 Signal has also introduced the Sesame protocol for the handling of devices;
-but it is unsure if this is what is used.
+but it is unclear if Sesame is currently used.
 
 #### OTR (version 3)
 
@@ -85,11 +85,11 @@ If a user had multiple OTRv3 sessions with the same buddy, the
 application needed to provide some way for the user to select
 which instance to send outgoing messages to.
 
-Instance tags on the 3rd version of the protocol had policies, which the user
+Instance tags in the 3rd version of the protocol had policies, which the user
 or the client per default could define:
 
 OTRL_INSTAG_BEST: send to the most secure one, based on: conv status (if the
-                  conversation is on encrypted, or plaintex and finished state),
+                  conversation is on encrypted, or plaintext and finished state),
                   then fingerprint status (if it is trusted), then most recent.
 OTRL_INSTAG_RECENT: send to the most recent of the two meta instances below
 OTRL_INSTAG_RECENT_RECEIVED: send to the most recently received
@@ -101,15 +101,13 @@ in the event of a tie). When calculating how recent an instance has been
 active, OTRL_INSTAG_BEST is limited by a one second resolution.
 
 OTRL_INSTAG_RECENT does not have this limitation, but due to inherent
-uncertainty in some networks, otr's notion of the most recent may not
+uncertainty in some networks, OTR's notion of the most recent may not
 always agree with the remote network.  It is important to understand
-this limitation due to the issue noted in the next paragraph.
-
-Note that instances do add some uncertainty when dealing with networks
+this limitation because instances do add uncertainty when dealing with networks
 that only deliver messages to the most recently active session for a
 buddy who is logged in multiple times. If you have a particular instance
 selected, and the IM network is simply not going to deliver to that
-particular instance, there isn't too much otr can do. In this case,
+particular instance, there isn't too much OTR can do. In this case,
 you may want your application to warn when a user has selected an
 instance that is not the most recent.
 
