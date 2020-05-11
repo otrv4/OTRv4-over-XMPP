@@ -35,10 +35,11 @@ The process works like this:
 2. Calculate: `enc_key(32), auth_key(32), IV(16) := SHA-256(sym_k || 0x00 || "OMEMO Payload")`
 3. Encrypt: `c := AES_CBC(enc_key, IV || message)`
 4. Calculate: `MAC := SHA-256(auth_key || c)`
-5. Concatenate: `payload := c || MAC`
+5. Concatenate: `payload := enc_key || MAC`
 6. Execute the double ratchet algorithm and generate a message key `mk`.
 7. Calculate: `h_enc_key(32), auth_key(32), IV(16) := SHA-256(m_k || 0x00 || "OMEMO Message Key Material")`
-8. Encrypt the payload: `h := (h_enc_key, payload)`
+8. Encrypt the payload: `h := AES_CBC(h_enc_key, payload)`
+9. Send `h || c`.
 
 Since step 6, it is executed per device.
 
