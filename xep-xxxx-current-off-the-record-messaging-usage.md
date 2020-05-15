@@ -31,3 +31,14 @@ OTR can be implemented in different modes that impact how the advertisement
 works.
 
 // TODO: modes, policies, different advertisement mechanisms
+
+Must contain:
+
+* Discovering if peer is online or offline
+* Routing and multidevice
+* Sever discovery
+* Publishing information
+
+Additional:
+* Toolkit?
+
