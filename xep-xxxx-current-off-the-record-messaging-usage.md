@@ -430,7 +430,18 @@ Non-Interactive Auth message can be sent (for online conversations and offline
 conversations respectively). Note that prior to sending any of these messages,
 Prekey values should be asked for.
 
+### Discovering if a peer is online or offline
+
+Peers that want to start an OTR conversation, need to have subscription to the
+contact's presence information. The best subscription state for this might
+be 'Both'.
+
 ## Building a session
+
+In order to start a OTR conversation, prekey values should be fetched. In order
+to start an online conversation, only a Client Profile should be asked for.
+In order to start an offline conversation, a Client Profile, a Prekey Profile
+and a Prekey Message should be asked for.
 
 // TODO: modes, policies
 
@@ -438,9 +449,6 @@ Must contain:
 
 * Discovering if peer is online or offline
 * Routing and multidevice
-
-* Sever discovery
-* Publishing information
 
 Additional:
 * Toolkit?
