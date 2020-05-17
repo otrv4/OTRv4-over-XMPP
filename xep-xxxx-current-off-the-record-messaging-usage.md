@@ -443,16 +443,174 @@ to start an online conversation, only a Client Profile should be asked for.
 In order to start an offline conversation, a Client Profile, a Prekey Profile
 and a Prekey Message should be asked for.
 
-// TODO: modes, policies
+An entity asks the server for Prekey Ensembles from a particular participant by
+sending a "Prekey Ensemble Query Retrieval message" for an specific identity
+and device (using the instance tag), for example, `queequeg@otr.im/7c91e4ce`,
+and specific versions, for example, "45".
 
-Must contain:
+```
+*Example 19. Asking for Prekey values*
 
-* Discovering if peer is online or offline
-* Routing and multidevice
+  <message
+      from='alice@xmpp.org/notebook'
+      id='nzd143v8'
+      to='prekey.xmpp.org'>
+    <body>AAQQ...</body>
+  </message>
+```
 
-Additional:
-* Toolkit?
+The server responds with a "Prekey Ensemble Retrieval message" if there are
+values in storage:
 
+```
+*Example 20. Server response for success*
+
+  <message
+      from='prekey.xmpp.org'
+      id='13fd16378'
+      to='alice@xmpp.org/notebook'>
+    <body>AAQT...</body>
+  </message>
+```
+
+The server responds with a "No Prekey-Ensembles in Storage message" if there
+are no values in storage:
+
+```
+*Example 21. Server response for failure*
+
+  <message
+      from='prekey.xmpp.org'
+      id='13fd16378'
+      to='alice@xmpp.org/notebook'>
+    <body>AAQO...</body>
+  </message>
+```
+
+From this point, messages should be sent according to the protocol.
+
+## OTR Messages
+
+### Construction and Decoding
+
+Some clients in the wild have been known to insert XML in the <body> node of a
+message. Clients that support OTR should tolerate encrypted payloads which
+expand to unescaped XML, and treat it as plain text.
+
+### Routing
+
+XMPP is designed so that the client needs to know very little about where and
+how a message will be routed. Generally, clients are encouraged to send messages
+to the bare JID and allow the server to route the messages as it sees fit.
+However, OTR requires that messages be sent to a particular resource. Therefore
+clients should send OTR messages to a full JID, possibly allowing the user to
+determine which resource (determined by the instance tag) they wish to start an
+encrypted session with. Furthermore, if a client receives a request to start an
+OTR session in a carboned message (due to a server which does not support the
+aforementioned "private" directive, or a client which does not set it), it
+should be silently ignored.
+
+### Multidevice Synchronization
+
+If a device has a policy for multi-device synchronization, before sending a
+message (except for a query message or a whitespace tag) a peer MUST explicitly
+fetch device lists for this peer and for the peer is wanting to start a
+conversation with.
+
+## Processing Hints
+
+Message Processing Hints (XEP-0334) [\[5\]](#references) defines a set of hints
+for how messages should be handled by XMPP servers. These hints are not hard and
+fast rules, but suggestions which the servers may or may not choose to follow.
+Best practice is to include the following hints on all OTR messages:
+
+```
+<no-copy xmlns="urn:xmpp:hints"/>
+<no-permanent-store xmlns="urn:xmpp:hints"/>
+```
+
+## Explicit Message Encryption
+
+Explicit Message Encryption (XEP-0380) [\[5\]](#references) defines a hint to
+let clients without OTR support know that this message was encrypted, and
+display a friendly message instead of the raw encrypted data. It is RECOMMENDED
+that the client adds this hint alongside every encrypted message
+
+```
+<encryption xmlns="urn:xmpp:eme:0" namespace="urn:xmpp:otr:0"/>
+```
+
+All together, an example OTR message might look like this (with the majority of
+the body stripped out for readability):
+
+```
+*Example 6. OTR message with processing hints*
+
+<message from='malvolio@otr.im/countesshousehold'
+         to='olivia@otr.im/veiled'>
+  <body>?OTR?v23?...</body>
+  <encryption xmlns="urn:xmpp:eme:0" namespace="urn:xmpp:otr:0"/>
+  <no-copy xmlns="urn:xmpp:hints"/>
+  <no-permanent-store xmlns="urn:xmpp:hints"/>
+  <private xmlns="urn:xmpp:carbons:2"/>
+</message>
+```
+
+## OTR Sessions
+
+### Starting an OTR session
+
+Most clients today provide options to automatically start an OTR session, to
+manually construct a session at the users request, or to always require the use
+of an OTR session even if the remote client does not support OTR.
+
+In the interest of user experience, it is NOT RECOMMENDED to start an OTR
+session with a previously unseen resource or one for which we do not have OTR
+keys cached without first discovering if the remote end supports OTR using one
+of the mechanisms described in the "Discovery" section of this document except
+in security critical contexts where user experience is not a concern.
+
+Instead, it is RECOMMENDED to always allow the user to manually start an OTR
+session and to indicate that OTR is known to be available when OTR support is
+discovered by any of the aforementioned mechanisms.
+
+### Ending an OTR session
+
+It is RECOMMENDED that the lifetime of OTR sessions be limited to the lifetime
+of the XMPP session in which the OTR session was established. If a resource
+associated with either end of the OTR session goes offline (a closing stream tag
+is received, or a fatal stream error occurs), it is RECOMMENDED to start an OTR
+offline session.
+
+## Use in XMPP URIs
+
+RFC 5122 [\[5\]](#references) defines a Uniform Resource Identifier (URI) and
+Internationalized Resource Identifier (IRI) scheme for XMPP entities, and XMPP
+URI Query Components (XEP-0147) [\[5\]](#references) defines various query
+components for use with XMPP URI's. When an entity has an associated OTR
+fingerprint its URI is often formed with "otr-fingerprint" in the query string.
+
+```
+Example 7. OTR Fingerprint¶
+
+xmpp:feste@allfools.lit?otr-fingerprint=AEA4D503298797D4A4FC823BC1D24524B4C54338
+```
+
+The XMPP Registrar [\[5\]](#references) maintains a registry of queries and
+key-value pairs for use in XMPP URIs at <https://xmpp.org/registrar/querytypes.html>.
+As of the date this document was authored, the 'otr-fingerprint' query string
+has not been formally defined and has therefore is not officially recognized by
+the registrar.
+
+## IANA Considerations
+
+This document requires no interaction with the Internet Assigned Numbers
+Authority (IANA).
+
+## XMPP Registrar Considerations
+
+No namespaces or parameters need to be registered with the XMPP Registrar as a
+result of this document.
 
 ## References
 
