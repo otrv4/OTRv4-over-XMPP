@@ -331,17 +331,14 @@ works.
 
 There are two main mechanisms used:
 
-1. plaintext advertisement
+1. Plaintext advertisement
 2. DAKE advertisement.
 
 ### Plaintext advertisement
 
 If you are implementing 'OTRv3 Compatible Mode' and 'Interactive-Only Mode',
 or starting an online conversations, you can use these kind of initialization
-messages, depending on if you want to use OTR's own discovery mechanisms or
-OTR's XMPP own discovery mechanisms.
-
-- OTR own discovery mechanisms:
+messages, which use OTR's own discovery mechanisms.
 
 1. Whitespace Tag
 
@@ -351,7 +348,7 @@ stanza, but it is most often found at the end. The OTR tag comprises the
 following bytes:
 
 ```
-*Example 1. OTR tag*
+*Example 14. OTR tag*
 
 \x20\x09\x20\x20\x09\x09\x09\x09 \x20\x09\x20\x09\x20\x09\x20\x20
 ```
@@ -360,13 +357,13 @@ and is followed by one or more of the following sequences to indicate the
 version of OTR which the client supports:
 
 ```
-*Example 2. OTR tag version 3*
+*Example 15. OTR tag version 3*
 
 \x20\x20\x09\x09\x20\x20\x09\x09
 ```
 
 ```
-*Example 2. OTR tag version 3*
+*Example 16. OTR tag version 3*
 
 \x20\x20\x09\x09\x20\x09\x20\x20
 ```
@@ -384,7 +381,8 @@ body which indicates the supported versions of OTR (currently only 3 and 4 are
 supported).
 
 ```
-*Example 3. OTR query*
+*Example 17. OTR query*
+
 ?OTR?v34?
 ```
 Any message which begins with the afforementioned string (note that the version
@@ -392,16 +390,47 @@ number[s] may be different) should be treated as an OTR message. The
 initialization message can contain a payload, which should not refer to the
 identity of any participant.
 
-- XMPP-OTR own discovery mechanisms:
+### DAKE advertisement
 
-For online conversations, an Identity message can be used to directly start
-an OTR conversation. This only works for version 4.
+If you are implementing 'Interactive-Only Mode', 'Standalone Mode',
+or starting offline conversations, you can use these kind of initialization
+messages, which use OTR's XMPP own discovery mechanisms.
 
 In order to determine whether a given contact has devices that support OTRv4,
 the devices node in PEP is consulted. Devices MUST subscribe to
 urn:xmpp:otr:1:devices via PEP, so that they are informed whenever their
 contacts add a new device. They MUST cache the most up-to-date version of the
 device list.
+
+```
+*Example 18. Devicelist update received by subscribed clients*
+
+<message from='ahab@otr.im'
+         to='ishmael@otr.im'
+         type='headline'
+         id='update_01'>
+  <event xmlns='http://jabber.org/protocol/pubsub#event'>
+    <items node='urn:xmpp:otr:1:devices'>
+      <item id='current'>
+        <devices xmlns='urn:xmpp:omemo:1'>
+          <device id='7c91e4ce' />
+          <device id='c8257518' label='Gajim Client' />
+        </devices>
+      </item>
+    </items>
+  </event>
+</message>
+```
+
+After the device list has been received, and the client have decided to
+which device to send an initialization message (which depends on the policy
+and instance tag behaviour defined. It can be to all of them, to the
+trusted one, to the most recent one, etc.), an identity message or a
+Non-Interactive Auth message can be sent (for online conversations and offline
+conversations respectively). Note that prior to sending any of these messages,
+Prekey values should be asked for.
+
+## Building a session
 
 // TODO: modes, policies
 
