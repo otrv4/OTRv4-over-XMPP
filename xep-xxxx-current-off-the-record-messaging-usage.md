@@ -20,15 +20,25 @@ Though this document will not focus on the OTR protocol itself, a brief overview
 is warranted to better understand the protocols strengths and weaknesses.
 
 OTR provides several cryptographic properties depending of what kind of
-conversation in established.
+conversation in established. In terms of deniability, OTR (in its version 4)
+provides offline deniability for any kind of conversations, but only online
+deniability for both parties during online conversations (it provides online
+deniability for only one party -the initiator- during offline conversations).
+It also provides confidentiality, integrity, and authentication (in a deniable
+matter). Furthermore, it provides forward secrecy and post-compromise security.
+To achieve all of these properties, OTR uses several cryptographic algorithms,
+such as DAKEs, SHAKE-256, ChaCha20, SMP, and more.
 
-confidentiality, deniability, authentication, forward secrecy and
-post-compromise security.
-OTR (in its version 4) uses several cryptographic algorithms, such as SHAKE-256
-and ChaCha20. An OTR session can be held only between two parties, meaning that
-OTR is incompatible with Multi-User Chat (XEP-0045) [3] and Mediated Information
-eXchange (MIX) (XEP-0369) [4]. It provides deniability in its online and offline
-way. It also provides forward secrecy and post-compromise security.
+An OTR session can be held only between two parties, regardless of them being
+online or offline. Because of this, OTR is incompatible with Multi-User Chat
+(XEP-0045) [\[3\]](#references) and Mediated Information eXchange (MIX)
+(XEP-0369) [\[4\]](#references); but OTR might support group chat in future
+versions.
+
+Take into account that OTR, in its version 4, can be implemented over clients
+following a selection of modes: 'OTRv3-compatible mode', 'OTRv4-standalone mode',
+and 'OTRv4-interactive-only'. Information about these modes can be found on
+the main protocol [\[5\]](#references).
 
 ## Discovery
 
