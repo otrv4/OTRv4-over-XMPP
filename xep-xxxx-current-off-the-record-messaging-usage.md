@@ -519,7 +519,7 @@ conversation with.
 
 ## Processing Hints
 
-Message Processing Hints (XEP-0334) [\[5\]](#references) defines a set of hints
+Message Processing Hints (XEP-0334) [\[7\]](#references) defines a set of hints
 for how messages should be handled by XMPP servers. These hints are not hard and
 fast rules, but suggestions which the servers may or may not choose to follow.
 Best practice is to include the following hints on all OTR messages:
@@ -531,7 +531,7 @@ Best practice is to include the following hints on all OTR messages:
 
 ## Explicit Message Encryption
 
-Explicit Message Encryption (XEP-0380) [\[5\]](#references) defines a hint to
+Explicit Message Encryption (XEP-0380) [\[8\]](#references) defines a hint to
 let clients without OTR support know that this message was encrypted, and
 display a friendly message instead of the raw encrypted data. It is RECOMMENDED
 that the client adds this hint alongside every encrypted message
@@ -544,7 +544,7 @@ All together, an example OTR message might look like this (with the majority of
 the body stripped out for readability):
 
 ```
-*Example 6. OTR message with processing hints*
+*Example 22. OTR message with processing hints*
 
 <message from='malvolio@otr.im/countesshousehold'
          to='olivia@otr.im/veiled'>
@@ -584,19 +584,19 @@ offline session.
 
 ## Use in XMPP URIs
 
-RFC 5122 [\[5\]](#references) defines a Uniform Resource Identifier (URI) and
+RFC 5122 [\[9\]](#references) defines a Uniform Resource Identifier (URI) and
 Internationalized Resource Identifier (IRI) scheme for XMPP entities, and XMPP
-URI Query Components (XEP-0147) [\[5\]](#references) defines various query
+URI Query Components (XEP-0147) [\[10\]](#references) defines various query
 components for use with XMPP URI's. When an entity has an associated OTR
 fingerprint its URI is often formed with "otr-fingerprint" in the query string.
 
 ```
-Example 7. OTR Fingerprint¶
+Example 23. OTR Fingerprint¶
 
 xmpp:feste@allfools.lit?otr-fingerprint=AEA4D503298797D4A4FC823BC1D24524B4C54338
 ```
 
-The XMPP Registrar [\[5\]](#references) maintains a registry of queries and
+The XMPP Registrar [\[11\]](#references) maintains a registry of queries and
 key-value pairs for use in XMPP URIs at <https://xmpp.org/registrar/querytypes.html>.
 As of the date this document was authored, the 'otr-fingerprint' query string
 has not been formally defined and has therefore is not officially recognized by
@@ -617,3 +617,26 @@ result of this document.
 1. Borisov, N., Goldberg, I. and Brewer, E. (20004). *Off-the-Record Communication,
    or, Why Not To Use PGP*, WPES’04. Available at:
    https://otr.cypherpunks.ca/otr-wpes.pdf
+2. *OTR version 4*. Available at
+   https://bugs.otr.im/otrv4/otrv4/-/blob/master/otrv4.md
+3. XEP-0045: Multi-User Chat. Available at:
+   https://xmpp.org/extensions/xep-0045.html
+4. XEP-0369: Mediated Information eXchange (MIX). Available at:
+   https://xmpp.org/extensions/xep-0369.html
+5. *OTR version 4 modes*. Available at
+   https://bugs.otr.im/otrv4/otrv4/-/tree/master/modes
+6. *OTR Prekey Server specification*. Available at
+   https://bugs.otr.im/otrv4/otrv4-prekey-server/-/blob/master/otrv4-prekey-server.md
+7. XEP-0334: Message Processing Hints. Available at:
+   https://xmpp.org/extensions/xep-0334.html
+8. XEP-0380: Explicit Message Encryption. Available at:
+   https://xmpp.org/extensions/xep-0380.html
+9. RFC 5122: Internationalized Resource Identifiers (IRIs) and Uniform Resource
+   Identifiers (URIs) for the Extensible Messaging and Presence Protocol (XMPP).
+   Avaiable at: http://tools.ietf.org/html/rfc5122
+10. XEP-0147: XMPP URI Query Components. Available at:
+    https://xmpp.org/extensions/xep-0147.html
+11. The XMPP Registrar maintains a list of reserved protocol namespaces as well
+    as registries of parameters used in the context of XMPP extension protocols
+    approved by the XMPP Standards Foundation. For further information,
+    see: https://xmpp.org/registrar/
