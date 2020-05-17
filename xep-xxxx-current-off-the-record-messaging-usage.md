@@ -43,6 +43,63 @@ following a selection of modes: 'OTRv3-compatible mode', 'OTRv4-standalone mode'
 and 'OTRv4-interactive-only'. Information about these modes can be found on
 the main protocol [\[5\]](#references).
 
+## Setup
+
+To participate of an OTR conversation, clients need to set up an OTR library,
+decide of a mode that will be used and generate an instance tag (which works as
+a device id). They should also publish their instance tag to a device list on
+the PEP node, so other devices can find it.
+
+### Adding a instance tag to the device list
+
+In order for other devices to be able to initiate a session with a given device
+(for offline conversations, and when not wanting to use a query message or
+whitespace tag), it first has to announce itself by adding its instace tag to
+the devices PEP node.
+
+It is REQUIRED to set the access model of the urn:xmpp:otr:1:devices node to
+'open' to give entities without presence subscription read access to the devices
+and allow them to establish an OTR session. Not having presence subscription is
+a common occurrence on the first few messages between two contacts.
+
+Devices MUST check that their own device id is contained in the list whenever
+they receive a PEP update from their own account. If they have been removed,
+they MUST reannounce themselves.
+
+The device element MAY contain an attribute called label, which is a user
+defined string describing a device that supports OTR. It is
+RECOMMENDED to keep the length of the label under 53 Unicode code points. It
+MUST not contain location, identity or private information, and only refer to
+the name of the client.
+
+```
+*Example 1. Adding the own device id to the list*
+
+<iq from='ahab@otr.im' type='set' id='announce1'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <publish node='urn:xmpp:otr:1:devices'>
+      <item id='current'>
+        <devices xmlns='urn:xmpp:otr:1'>
+          <device id='c45b041c' label='Beagle Client'/>
+          <device id='c1bb7b7a' />
+          <device id='7c91e4ce' label='ChatSecure Client' />
+        </devices>
+      </item>
+    </publish>
+    <publish-options>
+      <x xmlns='jabber:x:data' type='submit'>
+        <field var='FORM_TYPE' type='hidden'>
+          <value>http://jabber.org/protocol/pubsub#publish-options</value>
+        </field>
+        <field var='pubsub#access_model'>
+          <value>open</value>
+        </field>
+      </x>
+    </publish-options>
+  </pubsub>
+</iq>
+```
+
 ## Discovery
 
 Clients that support the OTR protocol can advertise it in different ways, as
@@ -57,9 +114,9 @@ advertisement.
 If you are implementing 'OTRv3 Compatible Mode' and 'Interactive-Only Mode',
 or starting an online conversations, you can use these kind of initialization
 messages, depending on if you want to use OTR's own discovery mechanisms or
-XMPP own discovery mechanisms.
+OTR's XMPP own discovery mechanisms.
 
-OTR own discovery mechanisms:
+- OTR own discovery mechanisms:
 
 1. Whitespace Tag
 
@@ -102,7 +159,7 @@ body which indicates the supported versions of OTR (currently only 3 and 4 are
 supported).
 
 ```
-*Example 5. OTR query¶
+*Example 3. OTR query*
 ?OTR?v34?
 ```
 Any message which begins with the afforementioned string (note that the version
@@ -110,6 +167,16 @@ number[s] may be different) should be treated as an OTR message. The
 initialization message can contain a payload, which should not refer to the
 identity of any participant.
 
+- XMPP-OTR own discovery mechanisms:
+
+For online conversations, an Identity message can be used to directly start
+an OTR conversation. This only works for version 4.
+
+In order to determine whether a given contact has devices that support OTRv4,
+the devices node in PEP is consulted. Devices MUST subscribe to
+urn:xmpp:otr:1:devices via PEP, so that they are informed whenever their
+contacts add a new device. They MUST cache the most up-to-date version of the
+device list.
 
 // TODO: modes, policies
 
